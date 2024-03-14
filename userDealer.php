@@ -2,12 +2,23 @@
     session_start();
     include "authentication.php";
     include "config.php";
-
+    $dealerId = $_SESSION['id'];
+    
     $page = isset($_GET['page']) ? $_GET['page'] : 1;
     $limit = 90;
     $offset = ($page-1)*$limit;
-    $sql = "SELECT * FROM users LIMIT $limit OFFSET $offset";
-    $query = mysqli_query($link,$sql);
+    // Modify SQL query based on the selected option
+    $filterOption = isset($_GET['showdata']) ? $_GET['showdata'] : "";
+         // Modify SQL query based on the selected option
+    if ($filterOption == 1) {
+        $sql = "SELECT * FROM users WHERE parent_id = $dealerId AND Role_id = 2 LIMIT $limit OFFSET $offset";
+    } else if ($filterOption == 2) {
+        $sql = "SELECT * FROM users WHERE parent_id = $dealerId AND Role_id = 3 LIMIT $limit OFFSET $offset";
+    } else {
+        // If no option is selected or invalid option, default to showing all users
+        $sql = "SELECT * FROM users WHERE parent_id = $dealerId LIMIT $limit OFFSET $offset";
+    }
+        $query = mysqli_query($link,$sql);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -48,8 +59,17 @@
     <div class="container">
         <h1 class="text-center">UserDealer List</h1>
 
+        <form action="" method="GET" style="float: left; margin: 1px;">
+            <label for="showdata">Select:</label>
+            <select id="showdata" name="showdata" onchange="this.form.submit()">
+                <option value="">select</option>
+                <option value="1" <?php $filterOption == 1 ?>>Dealer</option>
+                <option value="2" <?php $filterOption == 2 ?>>EndUser</option>
+            </select>
+        </form>
+
         <div class="text-right"><a href="EndUserCreate.php" style="float: right; margin: 1px;" class="btn btn-success mb-2"><i class='fas fa-plus'></i> Add EndUser</a></div>
-        <div class="text-right"><a href="create.php" class="btn btn-success mb-2"><i class='fas fa-plus'></i> Add Dealer</a></div>
+        <div class="text-right"><a href="DealerAddDealer.php" class="btn btn-success mb-2"><i class='fas fa-plus'></i> Add Dealer</a></div>
 
         <?php if(isset($_SESSION['success'])){ ?>
             <div class="alert alert-success"><?php echo $_SESSION['success']; unset($_SESSION['success']); ?></div>
@@ -100,9 +120,9 @@
                         <td><?php echo $row['email'] ?></td>
                         <td><img src="uploads/<?php echo $row['image'] ?>" width="100" height="125"></td>
                         <td>
-                            <!-- <div><a href="update.php?id=<?php echo $row['id'] ?>" class="btn btn-success" class="text-dark"><i class='fas fa-edit'></i>Update</a></div>
-                           <div><a href="delete.php?id=<?php echo $row['id'] ?>" class="btn btn-danger" class="text-dark"><i class='fas fa-trash'></i>Delete</a></div>  -->
-                            <!-- <div ><a href="Dealer.php"  class="btn btn-success"><i class='fas fa-plus'></i>Dealer Login</a></div> -->
+                            <div><a href="update.php?id=<?php echo $row['id'] ?>" class="btn btn-success" class="text-dark"><i class='fas fa-edit'></i>Update</a></div>
+                           <div><a href="delete.php?id=<?php echo $row['id'] ?>" class="btn btn-danger" class="text-dark"><i class='fas fa-trash'></i>Delete</a></div> 
+                            <div ><a href="Dealer.php"  class="btn btn-success"><i class='fas fa-plus'></i>Dealer Login</a></div>
                         </td>
                     </tr>
                 <?php } $count++;

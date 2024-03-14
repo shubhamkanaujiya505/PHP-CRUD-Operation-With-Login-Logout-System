@@ -6,7 +6,7 @@
     $page = isset($_GET['page']) ? $_GET['page'] : 1;
     $limit = 90;
     $offset = ($page-1)*$limit;
-    $sql = "SELECT * FROM users LIMIT $limit OFFSET $offset";
+    $sql = "SELECT * FROM users ORDER BY id DESC LIMIT $limit OFFSET $offset ";
     $query = mysqli_query($link,$sql);
 ?>
 <!DOCTYPE html>

@@ -3,6 +3,15 @@
     include "authentication.php";
     include "config.php";
 
+    $DealerLoginId = $_SESSION['id'];
+    $DealerEmail = 'EndUser';
+    if($DealerEmail == 'EndUser'){
+        $Role_id = 3;
+    }
+    
+    // echo "<pre>";
+    // print_r($_SESSION);die;
+
     if(isset($_POST['submit'])){
         $name = $_POST['name'];
         $sex = $_POST['sex'];
@@ -15,9 +24,9 @@
         move_uploaded_file($photo_temp,'uploads/'.$photo_name);
 
         if(empty($photo_name)){
-            $sql = "INSERT INTO users (name,sex,phone,email,image) VALUES ('$name','$sex','$phone','$email','avatar.png')";
+            $sql = "INSERT INTO users (name,sex,phone,email,image,Role,parent_id,Role_id) VALUES ('$name','$sex','$phone','$email','avatar.png','$DealerEmail',$DealerLoginId,$Role_id)";
         }else{
-            $sql = "INSERT INTO users (name,sex,phone,email,image) VALUES ('$name','$sex','$phone','$email','$photo_name')";
+            $sql = "INSERT INTO users (name,sex,phone,email,image,Role,parent_id,Role_id) VALUES ('$name','$sex','$phone','$email','$photo_name','$DealerEmail',$DealerLoginId,$Role_id)";
         }
         $query = mysqli_query($link,$sql);
         if($query){
@@ -27,10 +36,10 @@
             file_put_contents('logs/log_'.date("j-n-Y").'.log', $log, FILE_APPEND);
 
             $_SESSION['success'] = "One record inserted successfully";
-            header('location:index.php');
+            header('location:userDealer.php');
         }else{
             $_SESSION['error'] = "Something is wrong, Record not inserted";
-            header('location:index.php');
+            header('location:userDealer.php');
         }
     }
 ?>

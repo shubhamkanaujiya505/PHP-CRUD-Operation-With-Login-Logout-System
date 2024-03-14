@@ -1,12 +1,14 @@
 <?php 
     session_start();
    $adminLoginId = $_SESSION['id'];
-   if($adminLoginId == 1){
-    $adminId = "Dealer";
-        if($adminId == "Dealer"){
-            $Role_id = 2;
-        }
+   $DealerEmail = $_SESSION ['email'];
+
+   if($DealerEmail){
+    $adminId = 'Dealer';
+    if($adminId == "Dealer"){
+        $Role_id = 2;
     }
+   }
     include "authentication.php";
     include "config.php";
 
@@ -22,9 +24,9 @@
         move_uploaded_file($photo_temp,'uploads/'.$photo_name);
 
         if(empty($photo_name)){
-            $sql = "INSERT INTO users (name,sex,phone,email,image,Role,parent_id,Role_id) VALUES ('$name','$sex','$phone','$email','avatar.png','$adminId',$adminLoginId,$Role_id)";
+             $sql = "INSERT INTO users (name,sex,phone,email,image,Role,parent_id,Role_id) VALUES ('$name','$sex','$phone','$email','avatar.png','$adminId',$adminLoginId,$Role_id)";
         }else{
-            $sql = "INSERT INTO users (name,sex,phone,email,image,Role,parent_id,Role_id) VALUES ('$name','$sex','$phone','$email','$photo_name','$adminId',$adminLoginId,$Role_id)";
+             $sql = "INSERT INTO users (name,sex,phone,email,image,Role,parent_id,Role_id) VALUES ('$name','$sex','$phone','$email','$photo_name','$adminId',$adminLoginId,$Role_id)";
         }
         $query = mysqli_query($link,$sql);
         if($query){
@@ -34,10 +36,10 @@
             file_put_contents('logs/log_'.date("j-n-Y").'.log', $log, FILE_APPEND);
 
             $_SESSION['success'] = "One record inserted successfully";
-            header('location:index.php');
+            header('location:userDealer.php');
         }else{
             $_SESSION['error'] = "Something is wrong, Record not inserted";
-            header('location:index.php');
+            header('location:userDealer.php');
         }
     }
 ?>
@@ -55,7 +57,7 @@
 </head>
 <body>
     <div class="container">
-        <h1 class="text-center">Register Dealer</h1>
+        <h1 class="text-center">Add Sub-Dealer</h1>
         <form action="" method="POST" enctype="multipart/form-data">
             <div class="form-group">
                 <label for="name"><strong>Name</strong></label>

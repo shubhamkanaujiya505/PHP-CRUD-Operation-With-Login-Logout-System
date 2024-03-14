@@ -8,24 +8,28 @@
     
     if(isset($_POST['login'])){
         $email = $_POST['email'];
-        header('location:userDealer.php');
+        $dealerId = $_SESSION['id'];
         // Perform login based on email here
         // You may need to replace this with your actual login logic
-
+        
         // For example:
-        // $sql = "SELECT * FROM users WHERE email='$email'";
-        // $query = mysqli_query($link,$sql);
-        // $data = mysqli_fetch_assoc($query);
-        // if($data){
-        //     $_SESSION['id'] = $data['id'];
-        //     $_SESSION['name'] = $data['name'];
-        //     $_SESSION['timeout'] = time()+1800;
-        //     $_SESSION['login_at'] = date('h:m:s a');
-        //    
-        // }else{
-        //     $_SESSION['error'] = 'Email not found';
-        // }
+        $sql = "SELECT * FROM users WHERE email='$email'";
+        $query = mysqli_query($link,$sql);
+
+        $data = mysqli_fetch_assoc($query);
+        if($data){
+            $_SESSION['id'] = $data['id'];
+            $_SESSION['email'] = $data['email'];
+            $_SESSION['timeout'] = time()+1800;
+            $_SESSION['login_at'] = date('h:m:s a');
+            // echo "<pre>";
+            // print_r($_SESSION);die;
+            header('location:userDealer.php');
+        }else{
+            $_SESSION['error'] = 'Email not found';
+        }
     }
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -63,7 +67,7 @@
             <div class="input-group-prepend">
                 <span class="input-group-text"><i class='fas fa-envelope'></i></span>
             </div>
-            <input type="email" class="form-control" placeholder="Enter Email" id="email" name="email" required>
+            <input type="email" class="form-control" placeholder="Enter Email" id="email" name="email" value="<?php echo isset($_COOKIE['email']) ? $_COOKIE['email'] : '' ?>" required>
         </div>
 
         <button type="submit" class="btn btn-primary btn-block" name="login">Login</button>

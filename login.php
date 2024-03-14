@@ -19,7 +19,7 @@
                 unset($_SESSION['captcha']);
 
                 $log = getHostByName($_SERVER['HTTP_HOST']).' - '.date("F j, Y, g:i a").PHP_EOL.
-                "Login_".time().PHP_EOL.
+                "$sql".time().PHP_EOL.
                 "---------------------------------------".PHP_EOL;
                 file_put_contents('logs/log_'.date("j-n-Y").'.log', $log, FILE_APPEND);
 
@@ -45,7 +45,7 @@
         }
     }
 
-    $captcha_array = array(0,1,2,3,4,5,6,7,8,9,'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z');
+    $captcha_array = array(substr(sha1(mt_rand()),17,6));
     shuffle($captcha_array);
     $captcha_code = substr(implode('',$captcha_array),0,6);
     $_SESSION['captcha'] = $captcha_code;
@@ -61,6 +61,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
     <title>Login</title>
     <style>
         #login
@@ -100,9 +102,12 @@
 
         <div class="input-group mb-3">
             <div class="input-group-prepend">
-                <span class="input-group-text bg-dark text-white"><strong style="letter-spacing:2px"><?php echo $_SESSION['captcha'] ?></strong></span>
+                <span class="input-group-text bg-dark text-white"><strong style="letter-spacing:1px"><?php echo $_SESSION['captcha'] ?></strong></span>
             </div>
             <input type="text" class="form-control" placeholder="Enter Captcha" id="captcha" name="captcha" required>
+            <!-- <div class="input-group-append">
+                <button type="button" class="input-group-text" id="refreshCaptcha"><i class='fas fa-sync'></i></button>
+            </div> -->
         </div>
 
         <div class="text-right mb-4">
@@ -134,4 +139,14 @@
     setTimeout(function(){
         document.getElementsByClassName('alert')[0].style.display = 'none';
     }, 3000);
+
+    // $('#refreshCaptcha').click(function(){
+    //     $.ajax({
+    //         url: 'refresh_captcha.php',
+    //         type: 'post',
+    //         success:function(data){
+    //             $('#captch_refresh').text(data);
+    //         }
+    //     });
+    // });
 </script>
