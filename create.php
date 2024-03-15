@@ -22,9 +22,9 @@
         move_uploaded_file($photo_temp,'uploads/'.$photo_name);
 
         if(empty($photo_name)){
-            $sql = "INSERT INTO users (name,sex,phone,email,image,Role,parent_id,Role_id) VALUES ('$name','$sex','$phone','$email','avatar.png','$adminId',$adminLoginId,$Role_id)";
+         $sql = "INSERT INTO users (name,sex,phone,email,image,Role,parent_id,Role_id) VALUES ('$name','$sex','$phone','$email','avatar.png','$adminId','$adminLoginId','$Role_id')";
         }else{
-            $sql = "INSERT INTO users (name,sex,phone,email,image,Role,parent_id,Role_id) VALUES ('$name','$sex','$phone','$email','$photo_name','$adminId',$adminLoginId,$Role_id)";
+            $sql = "INSERT INTO users (name,sex,phone,email,image,Role,parent_id,Role_id) VALUES ('$name','$sex','$phone','$email','$photo_name','$adminId','$adminLoginId','$Role_id')";
         }
         $query = mysqli_query($link,$sql);
         if($query){
